@@ -1,2 +1,5 @@
 __pycache__/
-venv/
+venv_cplex/
+testing/
+quanten_benchmarking.egg-info
+old/
