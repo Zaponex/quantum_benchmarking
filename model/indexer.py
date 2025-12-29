@@ -56,3 +56,50 @@ def assign_ent_to_indexer(indexer, amr, slots, tasks):
                 w[(tname, r, z)] = indexer.get(("w", tname, r, z))
 
     return indexer, x, y, w
+
+def count_valid_variants(robots, slots, tasks):
+    """
+    Berechnet nur die Anzahl der gültigen Varianten.
+    Gibt eine einzige Zahl zurück.
+    """
+    from itertools import product
+    
+    # Generiere für jede Task alle (robot, start_slot) Kombinationen
+    task_options = []
+    for task in tasks:
+        duration = task["p"]
+        options = []
+        for robot in robots:
+            for start in slots:
+                if start + duration <= max(slots) + 1:
+                    options.append((robot, start, duration))
+        task_options.append(options)
+    
+    # Zähle gültige Kombinationen
+    count = 0
+    for combination in product(*task_options):
+        # Prüfe ob gültig (keine Überschneidungen pro Roboter)
+        robot_tasks = {}
+        for robot, start, duration in combination:
+            if robot not in robot_tasks:
+                robot_tasks[robot] = []
+            robot_tasks[robot].append((start, duration))
+        
+        # Check overlaps
+        valid = True
+        for task_list in robot_tasks.values():
+            for i in range(len(task_list)):
+                for j in range(i + 1, len(task_list)):
+                    s1, d1 = task_list[i]
+                    s2, d2 = task_list[j]
+                    # Overlap check
+                    if not (s1 + d1 <= s2 or s2 + d2 <= s1):
+                        valid = False
+                        break
+                if not valid:
+                    break
+        
+        if valid:
+            count += 1
+    
+    return count

@@ -1,0 +1,14 @@
+{
+   "S1": {
+   "Sim_Anneal_Makespan": 5,
+   "Cplex_Makespan": 5,
+   "Sim_Anneal_Runtime": 3,
+   "CplexRuntime": 0.2,
+   },
+   "S2": {
+   "Sim_Anneal_Makespan": 6,
+   "Cplex_Makespan": 7,
+   "Sim_Anneal_Runtime": 3,
+   "CplexRuntime": 5
+   }
+}

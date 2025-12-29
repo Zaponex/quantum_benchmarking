@@ -1,3 +1,52 @@
+
+from typing import List, Dict
+from model.qubo_builder import QuboBuilder
+
+def add_makespan_objective(
+    qb: QuboBuilder,
+    tasks: List[dict],          # [{"name":..., "p":...}, ...]
+    slots: List[int],           # [0,1,2,...]
+    y: Dict[tuple, int],        # (tname, z) -> idx
+    w_makespan: float
+):
+    """
+    Minimiert die Summe aller Completion Times (linear):
+    H₁ = Σ_t Σ_z (z + p_t) * y_tz
+    
+    Da QUBO quadratisch sein muss, wird dies zu:
+    H₁ = Σ_t Σ_z (z + p_t) * y_tz²  (aber y_tz² = y_tz, da binär!)
+    
+    Args:
+        qb: QUBO Builder
+        tasks: Liste von Tasks mit "name" und "p" (Prozesszeit)
+        slots: Verfügbare Zeitslots
+        y: Mapping (task_name, slot) -> QUBO-Variable-Index
+        w_makespan: Gewichtungsfaktor für dieses Objective
+    
+    if not w_makespan:
+        return qb
+    """    
+    # Für jede Task: addiere (z + p_t) für jeden möglichen Slot
+    for t in tasks:
+        tname = t["name"]
+        p = int(t["p"])
+        
+        for z in slots:
+            completion_time = z + p
+            # Linear term: (z + p) * y_tz
+            # Da y² = y für binäre Variablen, ist das einfach ein linearer Term
+            qb.add_linear(
+                y[(tname, z)], 
+                w_makespan * (completion_time **2)
+            )
+    
+    return qb
+
+
+
+
+#####OLD
+"""
 from typing import List, Dict
 from model.qubo_builder import QuboBuilder
 
@@ -31,3 +80,4 @@ def add_makespan_objective(
 
 
     return qb
+"""

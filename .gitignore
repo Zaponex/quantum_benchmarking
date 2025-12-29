@@ -3,3 +3,4 @@ venv_cplex/
 testing/
 quanten_benchmarking.egg-info
 old/
+analyzer/
