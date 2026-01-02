@@ -4,3 +4,7 @@ testing/
 quanten_benchmarking.egg-info
 old/
 analyzer/
+data/
+output.png 
+output__.png
+qaoa_analysis.png
