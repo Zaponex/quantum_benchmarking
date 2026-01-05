@@ -8,3 +8,4 @@ data/
 output.png 
 output__.png
 qaoa_analysis.png
+config.py
